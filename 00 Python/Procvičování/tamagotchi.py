@@ -1,4 +1,5 @@
 from sys import exit
+import datetime as dt
 
 
 kocka = {
@@ -14,6 +15,8 @@ kocka = {
     "nešťastnost": False,
     "nemoc": False,
 }
+
+puvodni_cas = dt.datetime.now()
 
 def main():
     print("Vítej!")
@@ -42,6 +45,8 @@ def main():
             case _:
                 print("Neplatná klávesa")
         
+        hladoveni()
+        starnuti()
         zkontroluj_status()
 
 
@@ -79,6 +84,27 @@ def vypis_status():
         Zdraví je: {kocka["životy"]}
         {kocka["jméno"]} je {"Šťastný" if kocka["nešťastnost"] == False else "Nešťastný"}
           """)
+
+def hladoveni():
+    global puvodni_cas
+
+    ted = dt.datetime.now()
+
+    if ted > puvodni_cas + dt.timedelta(minutes=10):
+        kocka["hlad"] += 10
+        print(f"{kocka["jméno"]} začíná mít hlad...")
+        puvodni_cas = ted # aby kód kontroloval každých 10 minut, je potřeba nahradit původní čas
+
+        
+def starnuti():
+    global puvodni_cas
+
+    ted = dt.datetime.now()
+
+    if ted > puvodni_cas + dt.timedelta(hours=1):
+        kocka["věk"] += 1
+        print(f"{kocka["jméno"]} má narozeniny!")
+        puvodni_cas = ted 
 
 if __name__ == "__main__":
     main()
