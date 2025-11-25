@@ -1,24 +1,15 @@
 from sys import exit
 import datetime as dt
+import json
 
 
-kocka = {
-    "jméno": "Aladin",
-    "hlad": 50,
-    "žízeň": 0,
-    "barvu": "fialová",
-    "životy": 100,
-    "čistota": 100,
-    "energie": 90,
-    "žije": True,
-    "věk": 0,
-    "nešťastnost": False,
-    "nemoc": False,
-}
+kocka = {}
 
 puvodni_cas = dt.datetime.now()
 
 def main():
+    load_game()
+
     print("Vítej!")
     print("""
         |\\---/|
@@ -48,6 +39,7 @@ def main():
         hladoveni()
         starnuti()
         zkontroluj_status()
+        save_game()
 
 
 def krmeni():
@@ -105,6 +97,17 @@ def starnuti():
         kocka["věk"] += 1
         print(f"{kocka["jméno"]} má narozeniny!")
         puvodni_cas = ted 
+
+def load_game():
+    # TODO reset hry, kontrola existence save_game.json
+    global kocka
+    with open("save_data.json", "r", encoding="utf-8") as f:
+        kocka = json.load(f)
+
+def save_game():
+    global kocka
+    with open("save_data.json", "w", encoding="utf-8") as f:
+        json.dump(kocka, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
     main()

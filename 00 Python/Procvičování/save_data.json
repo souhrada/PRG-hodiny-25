@@ -1,0 +1,13 @@
+{
+    "jméno": "Aladin",
+    "hlad": 10,
+    "žízeň": 0,
+    "barvu": "fialová",
+    "životy": 100,
+    "čistota": 100,
+    "energie": 90,
+    "žije": true,
+    "věk": 0,
+    "nešťastnost": false,
+    "nemoc": false
+}
