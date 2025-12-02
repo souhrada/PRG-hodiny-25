@@ -2,6 +2,7 @@ from sys import exit
 import datetime as dt
 import json
 import os
+from nicegui import ui
 
 
 kocka = {}
@@ -104,7 +105,20 @@ def reset_game():
 
 
 def main():
+
+    tlacitka = {
+        "Krmení": krmeni,
+        "Hra": hra,
+        "Spánek": spanek,
+    }
+
     load_game()
+
+    with ui.element("div").classes("w-full h-screen flex items-center justify-center flex-col gap-5"):
+        ui.label("Vítej")
+        with ui.grid(columns=3):
+            for jmeno, funkce in tlacitka.items():
+                ui.button(jmeno, on_click=funkce)
 
     print("Vítej!")
     print("""
@@ -112,33 +126,14 @@ def main():
         | o_o |
          \\_^_/
           """)
-    while True:
-        print(f"Pro nakrmení {kocka["jméno"]} stikni k, pro hraní h, pro spánek s. \nPro ukončení napiš konec, pro reset reset")
+    
+    
+    hladoveni()
+    starnuti()
+    zkontroluj_status()
+    save_game()
 
-        uziv_input = input()
-       
-        match uziv_input.lower():
-            case "konec":
-                print("Ukončení programu... bye!")
-                break
-            case "k":
-                krmeni()
-            case "h":
-                hra()
-            case "s":
-                spanek()
-            case "v":
-                vypis_status()
-            case "reset":
-                reset_game()
-            case _:
-                print("Neplatná klávesa")
-        
-        hladoveni()
-        starnuti()
-        zkontroluj_status()
-        save_game()
+    ui.run(native=True)
 
-if __name__ == "__main__":
-    main()
+main()
 
