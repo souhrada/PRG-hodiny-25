@@ -1,9 +1,12 @@
-from sys import exit
 import datetime as dt
 import json
 import os
 from nicegui import ui
+from PIL import Image
 
+zprava = None
+obrazek = None
+spritesheet = Image.open("cat.png")
 
 kocka = {}
 default_kocka = {
@@ -28,6 +31,9 @@ puvodni_cas = dt.datetime.now()
 def krmeni():
     kocka["hlad"] -= 10
     print(f"{kocka["jméno"]} vypadá šťastně.\nHlad je {kocka["hlad"]}." )
+    zprava.text = (f"{kocka["jméno"]} vypadá šťastně.\nHlad je {kocka["hlad"]}." )
+    zkontroluj_status()
+
 
 def zkontroluj_status():
     if kocka["hlad"] > 120 or kocka["hlad"] < -20:
@@ -36,20 +42,32 @@ def zkontroluj_status():
     if kocka["životy"] <= 0:
         kocka["žije"] = False
         print(f"{kocka["jméno"]} umřel.")
-        exit()
+        
+    hladoveni()
+    starnuti()
+    save_game()
 
 
 def hra():
     kocka["energie"] -= 10
     kocka["žízeň"] += 10
     kocka["hlad"] += 10
+    ui.notify("Energie + 10")
+    ui.notify("Hlad +10")
+    ui.notify("Žízeň + 10")
     kocka["nešťastnost"] = False
     print(f"Hraješ aport s {kocka["jméno"]}. {kocka["jméno"]} je šťastný")
+    zprava.text = f"Hraješ aport s {kocka["jméno"]}. {kocka["jméno"]} je šťastný" 
+    zkontroluj_status()
 
 def spanek():
     kocka["energie"] = 100
-    print(f"Zzz... zzz... zzz..")
     print(f"{kocka["jméno"]} se vzbudil s plně odpočatý, energie je {kocka["energie"]}")
+    zprava.text = f"Zzz... zzz... zzz.."
+    ui.notify(f"Energie je {kocka["energie"]}")
+    obrazek.source = vystrihni_obrazek(0, 45)
+    zkontroluj_status()
+
 
 def vypis_status():
     print(f"""
@@ -59,6 +77,8 @@ def vypis_status():
         Zdraví je: {kocka["životy"]}
         {kocka["jméno"]} je {"Šťastný" if kocka["nešťastnost"] == False else "Nešťastný"}
           """)
+    zkontroluj_status()
+
 
 def hladoveni():
     global puvodni_cas
@@ -82,7 +102,6 @@ def starnuti():
         puvodni_cas = ted 
 
 def load_game():
-    # TODO reset hry
     global kocka, default_kocka
     
     if os.path.exists("save_data.json"):
@@ -104,8 +123,14 @@ def reset_game():
     save_game()
 
 
-def main():
+def vystrihni_obrazek(x, y):
+    x = x * 64
+    y = y * 64
+    return spritesheet.crop((x, y, x + 64, y + 64))
+    
 
+def main():
+    global zprava, obrazek
     tlacitka = {
         "Krmení": krmeni,
         "Hra": hra,
@@ -115,7 +140,8 @@ def main():
     load_game()
 
     with ui.element("div").classes("w-full h-screen flex items-center justify-center flex-col gap-5"):
-        ui.label("Vítej")
+        obrazek = ui.image(vystrihni_obrazek(0, 0)).classes("h-32 w-32")
+        zprava = ui.label("Vítej")
         with ui.grid(columns=3):
             for jmeno, funkce in tlacitka.items():
                 ui.button(jmeno, on_click=funkce)
@@ -128,11 +154,8 @@ def main():
           """)
     
     
-    hladoveni()
-    starnuti()
-    zkontroluj_status()
-    save_game()
 
+    zkontroluj_status()
     ui.run(native=True)
 
 main()
