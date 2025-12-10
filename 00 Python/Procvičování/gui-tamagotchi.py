@@ -2,11 +2,12 @@ import datetime as dt
 import json
 import os
 from nicegui import ui
-from PIL import Image
+from PIL import Image # knihovna pillow, určena pro práci s obrázky
 
+# globální proměnné, se kterými pracujeme v různých funkcích
 zprava = None
 obrazek = None
-spritesheet = Image.open("cat.png")
+spritesheet = Image.open("cat.png") # otevření obrázku v pillow
 
 kocka = {}
 default_kocka = {
@@ -26,7 +27,7 @@ default_kocka = {
 puvodni_cas = dt.datetime.now()
 
 
-
+# Funkce:
 
 def krmeni():
     kocka["hlad"] -= 10
@@ -34,7 +35,8 @@ def krmeni():
     zprava.text = (f"{kocka["jméno"]} vypadá šťastně.\nHlad je {kocka["hlad"]}." )
     zkontroluj_status()
 
-
+# funkce zkontroluj status, kterou spouštíme v ostatních funkcích a která kontroluje také
+# hladovění, stárnutí a spouští ukládání hry
 def zkontroluj_status():
     if kocka["hlad"] > 120 or kocka["hlad"] < -20:
         kocka["životy"] -= 10 
@@ -57,6 +59,7 @@ def hra():
     ui.notify("Žízeň + 10")
     kocka["nešťastnost"] = False
     print(f"Hraješ aport s {kocka["jméno"]}. {kocka["jméno"]} je šťastný")
+    # jelikož neměníme celou proměnnou ale pouze .text, není potřeba global zprava
     zprava.text = f"Hraješ aport s {kocka["jméno"]}. {kocka["jméno"]} je šťastný" 
     zkontroluj_status()
 
@@ -65,6 +68,7 @@ def spanek():
     print(f"{kocka["jméno"]} se vzbudil s plně odpočatý, energie je {kocka["energie"]}")
     zprava.text = f"Zzz... zzz... zzz.."
     ui.notify(f"Energie je {kocka["energie"]}")
+    # jelikož neměníme celou proměnnou ale pouze .source, není potřeba global obrazek
     obrazek.source = vystrihni_obrazek(0, 45)
     zkontroluj_status()
 
@@ -122,15 +126,24 @@ def reset_game():
     kocka = default_kocka
     save_game()
 
-
+# vystřihni obrázek přijímá x a y a aplikuje je na funkci crop() z knihovny pillow
+# crop() sama o sobě funguje zvláštně, naše pomocná funkce nám vytváří jednodušší kód
+# ze spritesheetů můžeme snadno vykreslit obrázek tím, že zadáme pozici na x (v řadě) a y (sloupci)
 def vystrihni_obrazek(x, y):
     x = x * 64
     y = y * 64
+
+    # vracíme vyříznutý obrázek
+    # crop vyřezeává (zleva, zhora, zprava, zespod)
+    # naše funkce to mění na x a y podle velikosti obrázku ve spritesheetu (u nás 64x64 pixelů)
     return spritesheet.crop((x, y, x + 64, y + 64))
     
 
 def main():
+    # jelikož budeme měnit zprava a obrazek, musíme na ně odkázat pomocí global
     global zprava, obrazek
+
+    # názvy tlačítek a funkce, které spouštějí
     tlacitka = {
         "Krmení": krmeni,
         "Hra": hra,
@@ -139,8 +152,10 @@ def main():
 
     load_game()
 
+    # vytvoření divu, kterému dáváme flex a tím vycentrujeme ui
     with ui.element("div").classes("w-full h-screen flex items-center justify-center flex-col gap-5"):
-        obrazek = ui.image(vystrihni_obrazek(0, 0)).classes("h-32 w-32")
+        # vykreslení obrázku, pro které voláme vlastní pomocnou funkci vystrihni_obrazek
+        obrazek = ui.image(vystrihni_obrazek(0, 0)).classes("h-32 w-32") # zmenšení obrázku na 32x32 pixelů
         zprava = ui.label("Vítej")
         with ui.grid(columns=3):
             for jmeno, funkce in tlacitka.items():
@@ -156,6 +171,8 @@ def main():
     
 
     zkontroluj_status()
+
+    # spuštění aplikace v native nám skryje okno prohlížeče
     ui.run(native=True)
 
 main()
