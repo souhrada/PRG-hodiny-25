@@ -1,7 +1,8 @@
 import datetime as dt
 import json
 import os
-from nicegui import ui
+import sys
+from nicegui import ui, app # app se používá pro funcki .shutdown(), která nám umožní ukončit program
 from PIL import Image # knihovna pillow, určena pro práci s obrázky
 
 # globální proměnné, se kterými pracujeme v různých funkcích
@@ -126,6 +127,17 @@ def reset_game():
     kocka = default_kocka
     save_game()
 
+def exit():
+    app.shutdown()
+    sys.exit()
+
+def dialog():
+    with ui.dialog() as dialog:
+        ui.label('Hello')
+        ui.button('Close', on_click=dialog.close)
+
+    ui.button('Open dialog', on_click=dialog.open)
+
 # vystřihni obrázek přijímá x a y a aplikuje je na funkci crop() z knihovny pillow
 # crop() sama o sobě funguje zvláštně, naše pomocná funkce nám vytváří jednodušší kód
 # ze spritesheetů můžeme snadno vykreslit obrázek tím, že zadáme pozici na x (v řadě) a y (sloupci)
@@ -148,9 +160,14 @@ def main():
         "Krmení": krmeni,
         "Hra": hra,
         "Spánek": spanek,
+        "Konec": exit,
+        "Dialog": dialog
     }
 
     load_game()
+
+    # stylování body, pozadí stránky
+    ui.query('body').style("background-color: #FFFAED")
 
     # vytvoření divu, kterému dáváme flex a tím vycentrujeme ui
     with ui.element("div").classes("w-full h-screen flex items-center justify-center flex-col gap-5"):
@@ -159,7 +176,8 @@ def main():
         zprava = ui.label("Vítej")
         with ui.grid(columns=3):
             for jmeno, funkce in tlacitka.items():
-                ui.button(jmeno, on_click=funkce)
+                ui.button(jmeno, on_click=funkce).classes("!bg-red-100 text-black rounded-full")
+                # u tlačítek je před classes potřeba použít ! (tzn. important!), aby přepsaly defaultní styl
 
     print("Vítej!")
     print("""
