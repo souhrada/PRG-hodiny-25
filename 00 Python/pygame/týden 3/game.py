@@ -4,36 +4,12 @@ from sys import exit
 # inicializuje hru - spustíme pygame
 pygame.init()
 
-# funkce na vyřezávání obrázku ze spritesheetu
-def image_cutter(sheet, frame_x, frame_y, width, height, scale):
-    img = pygame.Surface((width, height)).convert_alpha() # Surface, na které později vykreslíme správnou část sprisheetu
-    # na surface blitneme část spritesheetu, na surface blitujeme z 0,0
-    # frame_x je číslo, kterým budeme manipulovat a určuje, kde na ose x vyřezáváme - násobíme jej vždy šířkou - např. 2 * šířka začne vyřezávat ve třetím sloupci framů  (např. 2*15 začne vyřezávat z 30 pixelu na x, takže ignoruje první dva framy)
-    # frame_y je číslo, kterým budeme manipulovat a určuje, kde na ose y vyřezáváme - násobíme jej vždy výškou - např. 3 * výška začne vyřezávat ve čtvrté řadě spritesheetu framů (např. 3*15 začne vyřezávat z 45 pixelu na y, takže ignoruje první tři řady)
-    # výška a šířka udává velikost vyřezávátka
-    img.blit(sheet, (0, 0), ((frame_x * width), (frame_y * height), width, height)) 
-    img = pygame.transform.scale(img, (width * scale, height* scale)) # obrázek zvětšíme, pokud je potřeba
-    img.set_colorkey((0,0,0)) # tento údaj změní černou barvu na průhlednou, což je potřeba pro správné vykreslení průhlednosti
-    return img # funkce vrátí vytvořený obrázek
-
-def player_animation(direction):
-    global  player_img, player_index
-    frame_count = 3
-
-    player_index += 0.1
-
-
-    if player_index >= frame_count:
-        player_index = 0
-    
-    player_img = image_cutter(player_spritesheet, int(player_index), direction, 15, 16, 3) 
-
 
 def reset_game():
     global player_lives, game_state
 
     player_lives = 3
-    player_rect.topleft = (50, 100)
+    player.topleft = (50, 100)
     game_state = "playing"
 
 def monster_animation():
@@ -72,13 +48,8 @@ running = True
 font = pygame.font.Font("PixelifySans-Regular.ttf", 25)
 font_game_over = pygame.font.Font("PixelifySans-Regular.ttf", 50)
 
-player_x = 150
-player_y = 150
-player_spritesheet = pygame.image.load("man_brownhair_run.png").convert_alpha() 
-player_img = image_cutter(player_spritesheet, 0, 0, 15, 16, 3) 
-player_rect = player_img.get_rect(midbottom=(player_x, player_y))
-player_index = 0
 
+player = pygame.Rect((50, 100, 50, 50))
 player_speed = 5
 player_lives = 3
 invulnerability = False
@@ -140,17 +111,13 @@ while running:
 
 
         if key[pygame.K_w]:
-            player_animation(1)
-            player_rect.y -= player_speed
+            player.move_ip(0, -player_speed)
         if key[pygame.K_s]:
-            player_animation(0)
-            player_rect.y += player_speed
+            player.move_ip(0, player_speed)
         if key[pygame.K_a]:
-            player_animation(2)
-            player_rect.x -= player_speed
+            player.move_ip(-player_speed, 0)
         if key[pygame.K_d]:
-            player_animation(3)
-            player_rect.x += player_speed
+            player.move_ip(player_speed, 0)
 
 
         # obarví obrazovku na bílo
@@ -174,14 +141,12 @@ while running:
         screen.blit(monster_surf, monster_rect)
 
         # kulaté závorky = tuple, podobné jako list, ale efektivnější a nelze jej měnit
-        # pygame.draw.rect(screen, (255,0,0), player)
-
-        screen.blit(player_img, player_rect)
+        pygame.draw.rect(screen, (255,0,0), player)
 
         # zapni časomíru - pod proměnnou elapsed_time přidávej čas
         elapsed_time += clock.get_time()
         
-        if player_rect.colliderect(monster_rect):
+        if player.colliderect(monster_rect):
             # if invulerability == False:
             # alternativní, používaný zápis
             if not invulnerability: 
