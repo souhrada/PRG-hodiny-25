@@ -6,7 +6,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.x = 150
         self.y = 150
-        self.spritesheet = pygame.image.load("assets/sprites/player/man_brownhair_run.png").convert_alpha() 
+        self.spritesheet = pygame.image.load("man_brownhair_run.png").convert_alpha() 
         self.image = image_cutter(self.spritesheet, 0, 0, 15, 16, 3) 
         self.rect = self.image.get_rect(midbottom=(self.x, self.y))
         self.index = 0

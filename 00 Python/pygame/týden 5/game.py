@@ -3,7 +3,6 @@ from sys import exit
 from settings import *
 from utility import image_cutter
 from player import Player
-from monster import Monster
 
 # inicializuje hru - spustíme pygame
 pygame.init()
@@ -15,6 +14,23 @@ def reset_game():
     player.sprite.lives = 3
     player.sprite.rect.topleft = (50, 100)
     game_state = "playing"
+
+def monster_animation():
+    # importujeme globální proměnné, které přepisujeme
+    global monster_surf, monster_index
+
+    # animace zjednodušeně - loopujeme listem, ve kterém jsou obrázky v rúzné fázi pohybu
+    # vykreslujeme vždy jeden obrázek
+    # index zvolí, který obrázek vykreslujeme
+    
+    monster_index += 0.1 # index měníme 0.1, aby byla animace pomalejší
+
+    # pokud je index větší, než množství obrázků v listu (délka listu), vyresetujeme index
+    if monster_index > len(monster_images):
+        monster_index = 0
+
+    # jelikož poujžíváme desetinná čísla v indexu, je potřeba jej zaokrouhlit pomocí funkce int() - ta zaokrouhluje vždy dolu
+    monster_surf = monster_images[int(monster_index)]
 
 
 
@@ -28,9 +44,26 @@ clock = pygame.time.Clock()
 running = True
 
 
-font = pygame.font.Font("assets/fonts/PixelifySans-Regular.ttf", 25)
-font_game_over = pygame.font.Font("assets/fonts/PixelifySans-Regular.ttf", 50)
+font = pygame.font.Font("PixelifySans-Regular.ttf", 25)
+font_game_over = pygame.font.Font("PixelifySans-Regular.ttf", 50)
 
+
+
+monster_idle = pygame.image.load("monster.png").convert_alpha()
+monster_idle = pygame.transform.scale(monster_idle, (monster_idle.get_width()*6, monster_idle.get_height()*6))
+monster_run1 = pygame.image.load("monster-run1.png").convert_alpha()
+monster_run1 = pygame.transform.scale(monster_run1, (monster_run1.get_width()*6, monster_run1.get_height()*6))
+monster_run2 = pygame.image.load("monster-run2.png").convert_alpha()
+monster_run2 = pygame.transform.scale(monster_run2, (monster_run2.get_width()*6, monster_run2.get_height()*6))
+
+monster_images = [monster_idle, monster_run1, monster_run2]
+monster_index = 0
+monster_surf = monster_images[monster_index]
+
+monster_x = 50
+monster_y = 450
+monster_rect = monster_surf.get_rect(midbottom=(monster_x, monster_y))
+monster_speed = 5
 
 restart_btn_w = 200
 restart_btn_h = 60
@@ -40,15 +73,12 @@ restart_btn_color = "#FF0000"
 restart_btn_hover_color = "#F76969"
 restart_btn_text_color = "#FFFFFF"
 
-restart_btn_font = pygame.font.Font("assets/fonts/PixelifySans-Regular.ttf", 25)
+restart_btn_font = pygame.font.Font("PixelifySans-Regular.ttf", 25)
 restart_btn_text = restart_btn_font.render("Restart", False, restart_btn_text_color)
 
 
 player = pygame.sprite.GroupSingle()
 player.add(Player())
-
-monsters = pygame.sprite.Group()
-monsters.add(Monster())
 
 # počáteční hodnota časomíry
 elapsed_time = 0
@@ -85,12 +115,16 @@ while running:
         screen.blit(text_lives, (SCREEN_WIDTH-100, 10))
 
 
+        monster_rect.x += monster_speed
+        monster_animation()
 
-       
+        if monster_rect.right >= SCREEN_WIDTH:
+            monster_speed *= -1
+        if monster_rect.left <= 0:
+            monster_speed *= -1
 
         # na obrazovku vykresli monster - .blit vykresluje na obrazovku, vždycky surface na rectangle
-        monsters.draw(screen)
-        monsters.update()
+        screen.blit(monster_surf, monster_rect)
 
         # kulaté závorky = tuple, podobné jako list, ale efektivnější a nelze jej měnit
         # pygame.draw.rect(screen, (255,0,0), player)
