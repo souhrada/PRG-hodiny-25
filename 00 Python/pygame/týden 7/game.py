@@ -50,6 +50,9 @@ player.add(Player())
 monsters = pygame.sprite.Group()
 monsters.add(Monster())
 
+# počáteční hodnota časomíry
+elapsed_time = 0
+
 game_state = "playing"
 
 # herní smyčka
@@ -93,9 +96,22 @@ while running:
         # pygame.draw.rect(screen, (255,0,0), player)
 
         player.draw(screen)
-        player.update(monsters, clock)
+        player.update()
 
-
+        # zapni časomíru - pod proměnnou elapsed_time přidávej čas
+        elapsed_time += clock.get_time()
+        
+        # if player_rect.colliderect(monster_rect):
+        #     # if invulerability == False:
+        #     # alternativní, používaný zápis
+        #     if not invulnerability: 
+        #         print("Auuu!")
+        #         player_lives -= 1 # odeberat život
+        #         invulnerability = True # zapni nesmrtelnost
+        #         elapsed_time = 0 # vynuluj časomíru
+        
+        if elapsed_time > 2000:
+            invulnerability = False
 
         if player.sprite.lives <= 0:
             game_state = "game_over"
