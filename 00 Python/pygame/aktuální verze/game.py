@@ -3,7 +3,7 @@ from sys import exit
 from settings import *
 from utility import image_cutter
 from player import Player
-from monster import Monster
+from monster import Monster, Monster2
 
 # inicializuje hru - spustíme pygame
 pygame.init()
@@ -48,7 +48,7 @@ player = pygame.sprite.GroupSingle()
 player.add(Player())
 
 monsters = pygame.sprite.Group()
-monsters.add(Monster())
+monsters.add(Monster(50, 450, "horizontal"), Monster(50, 100, "vertical"), Monster2(500, 100, "vertical"))
 
 game_state = "playing"
 
