@@ -4,7 +4,6 @@ from settings import *
 from utility import image_cutter
 from player import Player
 from monster import Monster, Monster2
-from game_object import Coin
 
 # inicializuje hru - spustíme pygame
 pygame.init()
@@ -95,6 +94,7 @@ while running:
 
         player.draw(screen)
         player.update(monsters, clock)
+
 
 
         if player.sprite.lives <= 0:
