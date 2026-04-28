@@ -1,0 +1,117 @@
+{
+	"identifier": "Level_0",
+	"uniqueIdentifer": "7b036cd0-21a0-11f1-894a-b31ef73b11c0",
+	"x": 0,
+	"y": 0,
+	"width": 800,
+	"height": 640,
+	"bgColor": "#696A79",
+	"neighbourLevels": [],
+	"customFields" : {},
+	"layers": [
+		"Background.png"
+	],
+	"entities": {
+		"Coins": [
+			{
+				"id": "Coins",
+				"iid": "2692ac40-21a0-11f1-ae8e-a376a328915b",
+				"layer": "Coins",
+				"x": 240,
+				"y": 112,
+				"width": 16,
+				"height": 16,
+				"color": 12470831,
+				"customFields" : {}
+			},
+			{
+				"id": "Coins",
+				"iid": "2a653810-21a0-11f1-ae8e-df68c6b53b5a",
+				"layer": "Coins",
+				"x": 192,
+				"y": 512,
+				"width": 16,
+				"height": 16,
+				"color": 12470831,
+				"customFields" : {}
+			},
+			{
+				"id": "Coins",
+				"iid": "2b338490-21a0-11f1-ae8e-3324abc3c599",
+				"layer": "Coins",
+				"x": 624,
+				"y": 288,
+				"width": 16,
+				"height": 16,
+				"color": 12470831,
+				"customFields" : {}
+			},
+			{
+				"id": "Coins",
+				"iid": "4c4ae470-21a0-11f1-ae8e-0de767d161cb",
+				"layer": "Coins",
+				"x": 48,
+				"y": 272,
+				"width": 16,
+				"height": 16,
+				"color": 12470831,
+				"customFields" : {}
+			},
+			{
+				"id": "Coins",
+				"iid": "4d164ac0-21a0-11f1-ae8e-a3b8426f42bf",
+				"layer": "Coins",
+				"x": 640,
+				"y": 480,
+				"width": 16,
+				"height": 16,
+				"color": 12470831,
+				"customFields" : {}
+			},
+			{
+				"id": "Coins",
+				"iid": "4ddf1900-21a0-11f1-ae8e-599e57d96661",
+				"layer": "Coins",
+				"x": 64,
+				"y": 48,
+				"width": 16,
+				"height": 16,
+				"color": 12470831,
+				"customFields" : {}
+			},
+			{
+				"id": "Coins",
+				"iid": "4ece8210-21a0-11f1-ae8e-871dd3d999b7",
+				"layer": "Coins",
+				"x": 672,
+				"y": 96,
+				"width": 16,
+				"height": 16,
+				"color": 12470831,
+				"customFields" : {}
+			},
+			{
+				"id": "Coins",
+				"iid": "54f97cd0-21a0-11f1-ae8e-9bb0a48de10b",
+				"layer": "Coins",
+				"x": 400,
+				"y": 544,
+				"width": 16,
+				"height": 16,
+				"color": 12470831,
+				"customFields" : {}
+			},
+			{
+				"id": "Coins",
+				"iid": "579165c0-21a0-11f1-ae8e-cfceec031f84",
+				"layer": "Coins",
+				"x": 416,
+				"y": 48,
+				"width": 16,
+				"height": 16,
+				"color": 12470831,
+				"customFields" : {}
+			}
+		]
+	}
+}

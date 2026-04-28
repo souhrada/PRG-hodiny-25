@@ -4,7 +4,7 @@ from settings import *
 from utility import image_cutter
 from player import Player
 from monster import Monster, Monster2
-from level import Level
+from game_object import Coin
 
 # inicializuje hru - spustíme pygame
 pygame.init()
@@ -51,17 +51,6 @@ player.add(Player())
 monsters = pygame.sprite.Group()
 monsters.add(Monster(50, 450, "horizontal"), Monster(50, 100, "vertical"), Monster2(500, 100, "vertical"))
 
-coin_group = pygame.sprite.Group()
-
-sprite_groups = {
-    "Coins": coin_group,
-}
-
-level_background = pygame.image.load("assets/world/background.png")
-level_data = "assets/world/data.json"
-
-level = Level(screen, level_background, level_data, sprite_groups)
-
 game_state = "playing"
 
 # herní smyčka
@@ -95,7 +84,7 @@ while running:
 
 
 
-        level.draw_objects()
+       
 
         # na obrazovku vykresli monster - .blit vykresluje na obrazovku, vždycky surface na rectangle
         monsters.draw(screen)
