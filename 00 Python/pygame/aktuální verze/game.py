@@ -88,14 +88,13 @@ while running:
         # obarví obrazovku na bílo
         screen.fill("white")
 
+        level.draw_objects()
+
         # render fontu
         text_lives = font.render(f"Lives: {player.sprite.lives}", False, "#000000")
         # vykreslení textu na obrazovku
         screen.blit(text_lives, (SCREEN_WIDTH-100, 10))
 
-
-
-        level.draw_objects()
 
         # na obrazovku vykresli monster - .blit vykresluje na obrazovku, vždycky surface na rectangle
         monsters.draw(screen)
