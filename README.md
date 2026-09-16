@@ -1,1 +1,1 @@
-# PRG-hodiny-25
+Kód z hodin programování
