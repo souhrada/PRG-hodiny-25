@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://p14d4mclqpob" path="res://scenes/killzone.gd" id="1_xlapc"]
 
 [node name="Killzone" type="Area2D"]
+collision_mask = 2
 script = ExtResource("1_xlapc")
 
 [node name="Timer" type="Timer" parent="."]
